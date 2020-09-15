@@ -1,0 +1,238 @@
+openapi: 3.0.0
+info:
+  title: Repository Management
+  version: '1.0'
+  description: This contains API specs for the repository management
+  contact:
+    email: lfasmpao@gmail.com
+    name: Leo Francisco Simpao
+servers:
+  - url: 'https://api.tcat.me/v1.0/en-us/account'
+    description: ''
+paths:
+  /servers:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - Server
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  servers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Server'
+      operationId: get-servers
+      description: List all account server list
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: id
+          description: Server ID
+    put:
+      summary: ''
+      operationId: put-servers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  server_info:
+                    $ref: '#/components/schemas/Server'
+      description: Modify a server
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                server_id:
+                  type: string
+                server_name:
+                  type: string
+                server_ip:
+                  type: string
+                server_domain:
+                  type: string
+                ovpn_options:
+                  type: string
+                ovpn_keys:
+                  type: string
+                service_ovpn_port:
+                  type: integer
+                service_http_port:
+                  type: integer
+                service_htun_port:
+                  type: integer
+                service_ssl_port:
+                  type: integer
+                service_ohp_port:
+                  type: integer
+                service_dns_enabled:
+                  type: boolean
+                service_slowdns_enabled:
+                  type: boolean
+              required:
+                - server_id
+        description: ''
+      tags:
+        - Server
+    post:
+      summary: ''
+      operationId: post-servers
+      description: Create new server
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                server_name:
+                  type: string
+                server_ip:
+                  type: string
+                server_domain:
+                  type: string
+                ovpn_options:
+                  type: string
+                ovpn_keys:
+                  type: string
+                service_ovpn_port:
+                  type: integer
+                service_http_port:
+                  type: integer
+                service_htun_port:
+                  type: integer
+                service_ssl_port:
+                  type: integer
+                service_ohp_port:
+                  type: integer
+                service_dns_enabled:
+                  type: boolean
+                service_slowdns_enabled:
+                  type: boolean
+              required:
+                - server_name
+                - server_ip
+                - server_domain
+                - ovpn_options
+                - ovpn_keys
+                - service_ovpn_port
+        description: ''
+      responses:
+        '200':
+          description: OK
+      tags:
+        - Server
+    delete:
+      summary: ''
+      operationId: delete-servers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+      description: Remove Server by ID
+      tags:
+        - Server
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: id
+          description: Server ID
+          required: true
+    parameters: []
+components:
+  schemas:
+    Server:
+      title: Server
+      type: object
+      properties:
+        name:
+          type: string
+          description: Server Name
+        ip_address:
+          type: string
+          description: Server IP Address
+        domain:
+          type: string
+          description: Server Domain
+        ovpn_options:
+          type: string
+          description: OpenVPN Options
+        ovpn_keys:
+          type: string
+          description: OpenVPN Keys
+        services:
+          type: object
+          description: Server Services
+          properties:
+            service_ovpn_port:
+              type: integer
+              description: OpenVPN Port
+            service_http_port:
+              type: integer
+              description: HTTP Proxy Port
+            service_htun_port:
+              type: number
+              description: HTTP Tunnel Port
+            service_ssl_port:
+              type: integer
+              description: SSL Port
+            service_dns_enabled:
+              type: boolean
+              description: Is Fast DNS Installed
+            service_slowdns_enabled:
+              type: boolean
+              description: Is Slow DNS installed
+            service_ohp_port:
+              type: integer
+              description: OpenHTTP Puncher Port
+            '':
+              type: string
+        owner:
+          type: object
+          description: Server Owner Information
+          properties:
+            owner_id:
+              type: string
+            owner_username:
+              type: string
+            owner_email:
+              type: string
+        date_created:
+          type: string
+        users:
+          type: array
+          description: Server User
+          items: {}
+        server_uptime:
+          type: integer
+        status:
+          type: string
+  securitySchemes:
+    Access Token:
+      type: http
+      scheme: bearer
+security:
+  - Access Token: []
+tags:
+  - name: Server

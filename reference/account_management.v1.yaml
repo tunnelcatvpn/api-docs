@@ -1,0 +1,270 @@
+openapi: 3.0.0
+info:
+  title: Account Authentication
+  version: '1.0'
+  description: This contains API specs for the account management
+  contact:
+    email: lfasmpao@gmail.com
+    name: Leo Francisco Simpao
+servers:
+  - url: 'https://api.tcat.me/v1.0/en-us/account'
+paths:
+  /login:
+    post:
+      summary: ''
+      operationId: post-login
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  token:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                      refresh_token:
+                        type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login_id:
+                  type: string
+                password:
+                  type: string
+              required:
+                - login_id
+                - password
+            examples:
+              Demo User:
+                value:
+                  login_id: demo
+                  password: demouser
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+        description: ''
+      description: Login
+      tags:
+        - Login
+    parameters: []
+  /register:
+    post:
+      summary: ''
+      operationId: post-register
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  user_info:
+                    type: object
+                    properties:
+                      username:
+                        type: string
+                      full_name:
+                        type: string
+                      last_repo_update:
+                        type: string
+                      account_roles:
+                        type: object
+                        properties:
+                          server_creation_limit:
+                            type: string
+                          add_users:
+                            type: string
+      description: Register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                full_name:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - email
+                - full_name
+                - password
+            examples:
+              Demo User:
+                value:
+                  username: demo
+                  email: demouser@tcat.me
+                  full_name: Demo User
+                  password: demouser
+      tags:
+        - Registration
+  /token/refresh:
+    post:
+      summary: ''
+      operationId: post-token-refresh
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  tokens:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+      parameters: []
+      security:
+        - Access Token: []
+      description: Refresh your access token
+      tags:
+        - Token
+        - Refresh
+  /token/revoke:
+    delete:
+      summary: ''
+      operationId: delete-token-revoke
+      responses:
+        '200':
+          description: OK
+      security:
+        - Access Token: []
+      description: Revoke Access Token
+      tags:
+        - Token
+        - Revoke
+  /info:
+    get:
+      summary: Your GET endpoint
+      tags:
+        - Information
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User-Information'
+      operationId: get-info
+      description: Current User Information
+      parameters: []
+      security:
+        - Access Token: []
+    post:
+      summary: ''
+      operationId: post-info
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                  '':
+                    $ref: '#/components/schemas/User-Information'
+                required:
+                  - msg
+      description: Modifiy Account Information
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                full_name:
+                  type: string
+                photo_url:
+                  type: string
+                password:
+                  type: string
+            examples:
+              Change Name:
+                value:
+                  full_name: Demo User
+              Change Password:
+                value:
+                  password: newpassword
+        description: ''
+      security:
+        - Access Token: []
+      tags:
+        - Information
+components:
+  schemas:
+    User-Information:
+      title: User-Information
+      type: object
+      x-examples:
+        example-1:
+          user_info:
+            username: string
+            full_name: string
+            last_repo_update: string
+            account_roles:
+              server_creation_limit: string
+              add_users: string
+      properties:
+        user_info:
+          type: object
+          required:
+            - username
+            - full_name
+            - last_repo_update
+            - account_roles
+          properties:
+            username:
+              type: string
+            full_name:
+              type: string
+            last_repo_update:
+              type: string
+            account_roles:
+              type: object
+              required:
+                - server_creation_limit
+                - add_users
+              properties:
+                server_creation_limit:
+                  type: string
+                add_users:
+                  type: string
+      required:
+        - user_info
+  securitySchemes:
+    Access Token:
+      type: http
+      scheme: bearer
+tags:
+  - name: Login
+  - name: Information
+  - name: Registration
+  - name: Token
+  - name: Refresh
+  - name: Revoke
